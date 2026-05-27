@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoCut Matrix AI - 工业级安装与激活手册</title>
+    <style>
+        :root {
+            --bg: #0a0a0c;
+            --surface: #121216;
+            --primary: #ff3b30;
+            --primary-glow: rgba(255, 59, 48, 0.4);
+            --text: #e0e0e0;
+            --text-sec: #999;
+            --border: rgba(255, 255, 255, 0.08);
+            --accent-bg: linear-gradient(135deg, #1a1a1f 0%, #0a0a0c 100%);
+            --glass: rgba(18, 18, 22, 0.85);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        header {
+            height: 450px;
+            background: radial-gradient(circle at 50% -20%, var(--primary-glow) 0%, transparent 70%), var(--accent-bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            padding: 0 20px;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0.3;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: -80px auto 100px;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 48px;
+            margin-bottom: 32px;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 59, 48, 0.2);
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.8rem;
+            letter-spacing: -2px;
+            margin-bottom: 0.8rem;
+            background: linear-gradient(to bottom, #fff, #a1a1a1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            font-weight: 600;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-weight: 600;
+        }
+
+        h2::before {
+            content: '';
+            width: 4px;
+            height: 28px;
+            background: var(--primary);
+            border-radius: 4px;
+            box-shadow: 0 0 12px var(--primary-glow);
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-sec);
+            font-size: 1.05rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(255, 59, 48, 0.12);
+            color: var(--primary);
+            border: 1px solid rgba(255, 59, 48, 0.25);
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .step-list {
+            list-style: none;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        .step-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 17px;
+            top: 40px;
+            bottom: -20px;
+            width: 1px;
+            background: var(--border);
+        }
+
+        .step-num {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            background: var(--bg);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            box-shadow: 0 0 20px rgba(255, 59, 48, 0.2);
+            z-index: 2;
+        }
+
+        .step-content {
+            padding-top: 4px;
+        }
+
+        .step-content h3 {
+            margin-bottom: 8px;
+            color: #fff;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .highlight-box {
+            background: #0d0d0f;
+            border: 1px solid var(--border);
+            padding: 24px;
+            border-radius: 16px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.95rem;
+            color: #fb3a30;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .highlight-box::before {
+            content: '>';
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 24px;
+        }
+
+        .spec-card {
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+
+        .spec-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateY(-4px);
+        }
+
+        .spec-card small {
+            display: block;
+            color: var(--primary);
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+
+        .spec-card span {
+            color: #fff;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .note-warn {
+            border-left: 4px solid var(--primary);
+            background: rgba(255, 59, 48, 0.05);
+            padding: 20px 24px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
+        }
+
+        .note-warn strong {
+            color: var(--primary);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            color: #555;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            border-top: 1px solid var(--border);
+        }
+
+        .kbd {
+            background: #222;
+            border: 1px solid #444;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 0.85rem;
+            color: #eee;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.8rem; }
+            .container { margin-top: -40px; }
+            .glass-card { padding: 32px 24px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="badge">Matrix AI Industrial Protocol</div>
+        <h1>AutoCut v9.0</h1>
+        <p>工业级全自动化短视频切片引擎 · 发行版安装手册</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- 环境要求 -->
+        <div class="glass-card">
+            <h2>运行环境要求</h2>
+            <p>为确保 AI 语义扫描与渲染管线的稳定性，建议满足以下硬件标准：</p>
+            <div class="spec-grid">
+                <div class="spec-card">
+                    <small>操作系统</small>
+                    <span>Windows 10/11 (64-bit)</span>
+                </div>
+                <div class="spec-card">
+                    <small>处理器 (CPU)</small>
+                    <span>Intel i5/AMD R5 8核及以上</span>
+                </div>
+                <div class="spec-card">
+                    <small>内存 (RAM)</small>
+                    <span>16GB DDR4 (最低 8GB)</span>
+                </div>
+                <div class="spec-card">
+                    <small>显卡 (GPU)</small>
+                    <span>NVIDIA GTX 1060+ / RT Core 优先</span>
+                </div>
+                <div class="spec-card">
+                    <small>图形接口</small>
+                    <span>DirectX 12 / WebGPU 支持</span>
+                </div>
+                <div class="spec-card">
+                    <small>网络</small>
+                    <span>仅首次激活需要，后续支持全离线</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 安装步骤 -->
+        <div class="glass-card">
+            <h2>部署与安装指南</h2>
+            <div class="step-list">
+                <div class="step-item">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h3>物理部署</h3>
+                        <p>将下载的压缩包解压至 <strong>非系统盘</strong> 根目录（如 <code>D:\AutoCut</code>）。请勿包含中文字符或空格的路径，以确保 FFmpeg 引擎调用链路通畅。</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h3>环境完整性检查</h3>
+                        <p>确保 <code>_internal/</code> 目录下存在 <code>FFmpeg.exe</code> 及 <code>models/</code> 离线权重文件夹。模型文件缺失将导致 ASR（自动语音识别）功能失效。</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h3>启动矩阵引擎</h3>
+                        <p>直接双击运行 <strong>AutoCut_Matrix_AI.exe</strong>。若系统弹出防火墙提示，请勾选“允许在专用网络和公用网络上通信”。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 授权激活 -->
+        <div class="glass-card">
+            <h2>授权激活流程</h2>
+            <p>本软件采用硬件锁（HWID）绑定机制，单次激活后支持长期离线使用。</p>
+            
+            <div class="note-warn">
+                <strong>[重要] 网络连接</strong>
+                <p>首次运行软件时需确保计算机能够访问授权服务器。一旦证书下载成功并校准硬件指纹，即可断网运行。</p>
+            </div>
+
+            <div class="step-list">
+                <div class="step-item">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h3>获取 HWID</h3>
+                        <p>在登录页面的右下角点击“复制硬件指纹”，将 32 位唯一识别码提交给管理员或在管理控制台备案。</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h3>输入卡密 (CD-KEY)</h3>
+                        <p>在授权对话框中输入下发的激活码，点击“在线同步验证”。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                授权状态：商业版 (Industrial Production) · 允许离线鉴权
+            </div>
+        </div>
+
+        <!-- 常见问题 -->
+        <div class="glass-card" style="border-color: rgba(255, 59, 48, 0.2);">
+            <h2>维护与排障 (FAQ)</h2>
+            <p><strong>Q: 启动后黑屏或无法加载控制面板？</strong><br>
+            A: 请确保使用最新版的 Chrome 或 Edge 浏览器访问地址 <code>http://127.0.0.1:5000</code>。IE 浏览器已被彻底弃用。</p>
+            
+            <p><strong>Q: 杀毒软件报毒？</strong><br>
+            A: 由于程序采用 PyInstaller 打包且包含底层硬件劫持侦测逻辑，部分杀毒软件会误报。请将程序目录添加至白名单。</p>
+            
+            <p><strong>Q: 处理 4K 视频时 GPU 占用极高？</strong><br>
+            A: 这是正常现象。Matrix AI 引擎会满载调用显卡进行 WebGPU 语义分析，建议在处理期间关闭其他高负载应用。</p>
+        </div>
+
+    </div>
+
+    <footer>
+        &copy; 2026 AutoCut Matrix AI Industrial Ecosystem. <br>
+        INTERNAL DISTRIBUTION ONLY · VERSION 9.0.0-PRO-CHINA <br>
+        基于 Pure Semantic 架构的工业级视频管线标准
+    </footer>
+
+</body>
+</html>

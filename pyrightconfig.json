@@ -1,0 +1,7 @@
+{
+    "reportUnannotatedClassAttribute": "none",
+    "reportMissingTypeStubs": "none",
+    "reportUnknownVariableType": "none",
+    "reportUnknownMemberType": "none",
+    "reportUnusedCallResult": "none"
+}

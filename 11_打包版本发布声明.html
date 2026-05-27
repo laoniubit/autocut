@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoCut Matrix AI - Production Release Manual</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0c;
+            --surface: #121216;
+            --primary: #ff3b30;
+            --primary-glow: rgba(255, 59, 48, 0.4);
+            --text: #e0e0e0;
+            --text-sec: #999;
+            --border: rgba(255, 255, 255, 0.08);
+            --accent-bg: linear-gradient(135deg, #1a1a1f 0%, #0a0a0c 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        header {
+            height: 400px;
+            background: radial-gradient(circle at 50% -20%, var(--primary-glow) 0%, transparent 70%), var(--accent-bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0.3;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: -60px auto 100px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .glass-card {
+            background: rgba(18, 18, 22, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.5rem;
+            letter-spacing: -1px;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to bottom, #fff, #888);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        h2::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-sec);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(255, 59, 48, 0.15);
+            color: var(--primary);
+            border: 1px solid rgba(255, 59, 48, 0.3);
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .step-list {
+            list-style: none;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .step-num {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .step-content h3 {
+            margin-bottom: 5px;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        .highlight-box {
+            background: #1a1a1f;
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Inter', monospace;
+            font-size: 0.9rem;
+            color: #00ffaa;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .info-cell {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .info-cell small {
+            display: block;
+            color: var(--primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #444;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px var(--primary-glow);
+        }
+
+        @media (max-width: 768px) {
+            .info-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="badge">Matrix AI Industrial Ecosystem</div>
+        <h1>AutoCut v9.5</h1>
+        <p>Industrial-Grade Automated Vertical Video Slicing Engine</p>
+        <p style="font-size: 0.9rem; opacity: 0.7; margin-top: 10px;">工业级短视频全自动切片生产线</p>
+    </header>
+
+    <div class="container">
+        
+        <div class="glass-card">
+            <h2>Quick Start / 快速开始</h2>
+            <div class="step-list">
+                <div class="step-item">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h3>Launch Engine / 启动引擎</h3>
+                        <p>Double-click <strong>AutoCut_Matrix_AI.exe</strong>. Ensure no other service is occupying port 5000.<br>
+                        双击运行 <strong>AutoCut_Matrix_AI.exe</strong>。确保 5000 端口未被占用。</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h3>Access UI / 访问界面</h3>
+                        <p>Open <strong>Chrome/Edge</strong> and navigate to:<br>
+                        打开浏览器访问地址：</p>
+                        <div class="highlight-box">http://127.0.0.1:5000</div>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h3>Activation / 授权激活</h3>
+                        <p>Click "License" in the header and enter your <strong>CD-KEY</strong> for first-time activation.<br>
+                        点击顶部“试用版/授权”按钮，输入 <strong>卡密</strong> 进行首次在线激活。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <h2>Environment / 运行环境要求</h2>
+            <div class="info-grid">
+                <div class="info-cell">
+                    <small>OS / 操作系统</small>
+                    <p>Windows 10/11 (64-bit)</p>
+                </div>
+                <div class="info-cell">
+                    <small>GPU / 显卡加速</small>
+                    <p>NVIDIA GTX 10-series+ (WebGPU Enabled)</p>
+                </div>
+                <div class="info-cell">
+                    <small>Storage / 存储</small>
+                    <p>SSD recommended for 4K processing</p>
+                </div>
+                <div class="info-cell">
+                    <small>Dependencies / 依赖</small>
+                    <p>Internal FFmpeg 6.0 Bundle included</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <h2>Technical Specifications</h2>
+            <p>Built for high-performance industrial video pipelines with air-gapped security in mind.</p>
+            
+            <div class="info-grid">
+                <div class="info-cell">
+                    <small>Native Engine</small>
+                    <p>Internal FFmpeg 6.0 Bundle (NVENC/VAAPI Enabled)</p>
+                </div>
+                <div class="info-cell">
+                    <small>AI Inference</small>
+                    <p>Edge-side WebGPU Whisper Pipeline (Zero Cloud Sync)</p>
+                </div>
+                <div class="info-cell">
+                    <small>Architecture</small>
+                    <p>Project-based Atomic JSON State Preservation</p>
+                </div>
+                <div class="info-cell">
+                    <small>Security</small>
+                    <p>Hardware-locked Offline Licensing System</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card" style="border-color: rgba(255, 59, 48, 0.2);">
+            <h2>Important Notes / 注意事项</h2>
+            <p><strong>Offline Usage:</strong> Once activated, you can run the app completely air-gapped. Do not delete <code>offline_license.json</code>.<br>
+            <strong>离线使用：</strong> 激活后支持全离线运行，请勿删除 <code>_internal_/offline_license.json</code>。</p>
+            <p><strong>Antivirus:</strong> Add the installation folder to the <strong>Exclusion List</strong> to prevent engine blockage.<br>
+            <strong>杀毒软件：</strong> 请将安装目录添加至白名单，避免 FFMPEG 引擎被拦截。</p>
+        </div>
+
+    </div>
+
+    <footer>
+        &copy; 2026 AutoCut Matrix AI. ALL RIGHTS RESERVED. <br>
+        INTERNAL INDUSTRIAL DISTRIBUTION v9.0.0-PRO
+    </footer>
+
+</body>
+</html>

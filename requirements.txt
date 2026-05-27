@@ -1,0 +1,12 @@
+# --- 普通依赖从清华镜像高速下载 ---
+-i https://pypi.tuna.tsinghua.edu.cn/simple
+flask>=2.3.2
+flask-socketio>=5.3.4
+psutil>=5.9.5
+cryptography>=41.0.3
+requests>=2.31.0
+numpy>=1.17.3
+onnxruntime>=1.14.0
+
+mediapipe>=0.10.0
+opencv-python>=4.8.0

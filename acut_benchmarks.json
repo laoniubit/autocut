@@ -1,0 +1,376 @@
+{
+    "history": [
+        {
+            "ts": 1777881994,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 442.0,
+            "real_time": 27.9,
+            "factor": 15.83
+        },
+        {
+            "ts": 1778488956,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 442.0,
+            "real_time": 28.6,
+            "factor": 15.45
+        },
+        {
+            "ts": 1778495164,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 442.0,
+            "real_time": 27.0,
+            "factor": 16.38
+        },
+        {
+            "ts": 1778548040,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 161.9,
+            "real_time": 17.0,
+            "factor": 9.54
+        },
+        {
+            "ts": 1778581509,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 886.8,
+            "real_time": 50.3,
+            "factor": 17.62
+        },
+        {
+            "ts": 1778653107,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 469.1,
+            "real_time": 28.1,
+            "factor": 16.71
+        },
+        {
+            "ts": 1778750968,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 349.8,
+            "real_time": 27.7,
+            "factor": 12.62
+        },
+        {
+            "ts": 1778755949,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 349.8,
+            "real_time": 24.7,
+            "factor": 14.15
+        },
+        {
+            "ts": 1778756112,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 349.8,
+            "real_time": 24.3,
+            "factor": 14.42
+        },
+        {
+            "ts": 1778756293,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 349.8,
+            "real_time": 19.0,
+            "factor": 18.43
+        },
+        {
+            "ts": 1778757346,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 349.8,
+            "real_time": 21.2,
+            "factor": 16.51
+        },
+        {
+            "ts": 1778757783,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 349.8,
+            "real_time": 21.3,
+            "factor": 16.39
+        },
+        {
+            "ts": 1778758254,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 349.8,
+            "real_time": 21.4,
+            "factor": 16.38
+        },
+        {
+            "ts": 1778813505,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 349.8,
+            "real_time": 25.4,
+            "factor": 13.78
+        },
+        {
+            "ts": 1778815101,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 349.8,
+            "real_time": 26.2,
+            "factor": 13.37
+        },
+        {
+            "ts": 1778817715,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 349.8,
+            "real_time": 21.9,
+            "factor": 15.98
+        },
+        {
+            "ts": 1778832727,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 349.8,
+            "real_time": 21.0,
+            "factor": 16.67
+        },
+        {
+            "ts": 1778835785,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 349.8,
+            "real_time": 19.8,
+            "factor": 17.67
+        },
+        {
+            "ts": 1778857388,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 282.9,
+            "real_time": 20.0,
+            "factor": 14.17
+        },
+        {
+            "ts": 1778857579,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 480.5,
+            "real_time": 25.4,
+            "factor": 18.93
+        },
+        {
+            "ts": 1778905634,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 880.0,
+            "real_time": 48.7,
+            "factor": 18.08
+        },
+        {
+            "ts": 1778921462,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 880.0,
+            "real_time": 46.5,
+            "factor": 18.91
+        },
+        {
+            "ts": 1778923831,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 355.0,
+            "real_time": 23.4,
+            "factor": 15.16
+        },
+        {
+            "ts": 1778924708,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 355.0,
+            "real_time": 21.6,
+            "factor": 16.45
+        },
+        {
+            "ts": 1778925746,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 355.0,
+            "real_time": 24.7,
+            "factor": 14.37
+        },
+        {
+            "ts": 1778925862,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 355.0,
+            "real_time": 22.1,
+            "factor": 16.05
+        },
+        {
+            "ts": 1778926159,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 355.0,
+            "real_time": 25.1,
+            "factor": 14.15
+        },
+        {
+            "ts": 1778926332,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 355.0,
+            "real_time": 21.0,
+            "factor": 16.9
+        },
+        {
+            "ts": 1778929143,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 880.0,
+            "real_time": 54.4,
+            "factor": 16.18
+        },
+        {
+            "ts": 1778929497,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 880.0,
+            "real_time": 50.3,
+            "factor": 17.48
+        },
+        {
+            "ts": 1778940271,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 880.0,
+            "real_time": 51.0,
+            "factor": 17.26
+        },
+        {
+            "ts": 1778946282,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 880.0,
+            "real_time": 49.9,
+            "factor": 17.62
+        },
+        {
+            "ts": 1778947254,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 880.0,
+            "real_time": 57.8,
+            "factor": 15.23
+        },
+        {
+            "ts": 1778982608,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 718.0,
+            "real_time": 44.2,
+            "factor": 16.25
+        },
+        {
+            "ts": 1778983717,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 718.0,
+            "real_time": 44.6,
+            "factor": 16.09
+        },
+        {
+            "ts": 1778984416,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 718.0,
+            "real_time": 46.3,
+            "factor": 15.52
+        },
+        {
+            "ts": 1778984975,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 718.0,
+            "real_time": 42.7,
+            "factor": 16.8
+        },
+        {
+            "ts": 1778985219,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 718.0,
+            "real_time": 43.4,
+            "factor": 16.54
+        },
+        {
+            "ts": 1778985347,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 718.0,
+            "real_time": 40.0,
+            "factor": 17.93
+        },
+        {
+            "ts": 1778993007,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 718.0,
+            "real_time": 41.4,
+            "factor": 17.35
+        },
+        {
+            "ts": 1778993277,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 718.0,
+            "real_time": 38.4,
+            "factor": 18.69
+        },
+        {
+            "ts": 1778994398,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 718.0,
+            "real_time": 43.3,
+            "factor": 16.58
+        },
+        {
+            "ts": 1778996172,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 564.0,
+            "real_time": 36.1,
+            "factor": 15.63
+        },
+        {
+            "ts": 1778996557,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 895.0,
+            "real_time": 48.9,
+            "factor": 18.29
+        },
+        {
+            "ts": 1779009168,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 564.0,
+            "real_time": 35.1,
+            "factor": 16.08
+        },
+        {
+            "ts": 1779011259,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 880.0,
+            "real_time": 54.9,
+            "factor": 16.04
+        },
+        {
+            "ts": 1779014041,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 564.0,
+            "real_time": 34.4,
+            "factor": 16.41
+        },
+        {
+            "ts": 1779030866,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 880.0,
+            "real_time": 55.2,
+            "factor": 15.96
+        },
+        {
+            "ts": 1779032149,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 880.0,
+            "real_time": 53.1,
+            "factor": 16.56
+        },
+        {
+            "ts": 1779032561,
+            "key": "cuda_large-v3-turbo",
+            "v_dur": 880.0,
+            "real_time": 53.2,
+            "factor": 16.54
+        }
+    ],
+    "stats": {
+        "cpu_small": {
+            "runs": 8,
+            "avg_factor": 7.32
+        },
+        "cuda_small": {
+            "runs": 23,
+            "avg_factor": 11.62
+        },
+        "cuda_large-v3": {
+            "runs": 31,
+            "avg_factor": 9.01
+        },
+        "cuda_medium": {
+            "runs": 4,
+            "avg_factor": 6.99
+        },
+        "cuda_large-v3-turbo": {
+            "runs": 67,
+            "avg_factor": 16.29
+        }
+    }
+}
