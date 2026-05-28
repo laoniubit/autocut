@@ -8,27 +8,27 @@
 # -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 # --- 核心 Web 框架 ---
-flask>=2.3.2
-flask-socketio>=5.3.4
+flask==3.1.3
+flask-socketio==5.6.1
 
 # --- 系统工具 ---
-psutil>=5.9.5
+psutil==7.2.2
 
 # --- 授权与加密 ---
-cryptography>=41.0.3
+cryptography==48.0.0
 
 # --- 网络请求 ---
-requests>=2.31.0
+requests==2.34.2
 
 # --- AI 推理 (纯 CPU, 跨平台) ---
-numpy>=1.24.0
+numpy==2.4.6
 # Mac ARM64 专用 ONNX Runtime (CoreML 加速可选)
-onnxruntime>=1.17.0
+onnxruntime==1.26.0
 
 # --- 视觉处理 ---
 # mediapipe Mac ARM64 从 0.10.9 开始支持 Apple Silicon
-mediapipe>=0.10.9
-opencv-python>=4.8.0
+mediapipe==0.10.35
+opencv-python==4.13.0.92
 
 # --- 打包工具 ---
-pyinstaller>=6.3.0
+pyinstaller==6.20.0

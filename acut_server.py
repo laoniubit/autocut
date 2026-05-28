@@ -123,7 +123,7 @@ def serve_models(filename):
 
 try:
     # Use threading async mode. Maximize packaging compatibility.
-    socketio = SocketIO(typing.cast(typing.Any, app), async_mode='threading', cors_allowed_origins="*")
+    socketio = SocketIO(typing.cast(typing.Any, app), async_mode='threading', cors_allowed_origins=["http://127.0.0.1:5010", "http://localhost:5010"])
 except Exception as e:
     _write_startup_error(e)
     print(f"[FATAL] SocketIO Init failed. Wrote to STARTUP_ERROR.TXT: {e}")
