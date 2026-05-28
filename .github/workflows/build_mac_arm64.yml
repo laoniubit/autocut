@@ -67,6 +67,7 @@ jobs:
             -DWHISPER_BUILD_TESTS=OFF \
             -DWHISPER_BUILD_EXAMPLES=ON \
             -DGGML_METAL=${{ matrix.ggml-metal }} \
+            -DGGML_NATIVE=OFF \
             -DBUILD_SHARED_LIBS=OFF \
             -DCMAKE_OSX_ARCHITECTURES=${{ matrix.osx-arch }} \
             -DCMAKE_BUILD_TYPE=Release
