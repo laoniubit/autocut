@@ -127,8 +127,8 @@ jobs:
           echo "ffmpeg 路径: $(ls -la _internal/ffmpeg 2>/dev/null || echo '未找到')"
           echo "templates 路径: $(ls -la _internal/templates 2>/dev/null || echo '未找到')"
 
-          # 后台启动 Flask 服务器，并把 stdout/stderr 全部写入日志文件
-          python acut_server.py > /tmp/server_test.log 2>&1 &
+          # 后台启动 Flask 服务器，并把 stdout/stderr 全部写入日志文件（使用 python -u 强制不缓冲）
+          python -u acut_server.py > /tmp/server_test.log 2>&1 &
           SERVER_PID=$!
           echo "服务器 PID: $SERVER_PID"
 
@@ -136,7 +136,7 @@ jobs:
           echo "等待服务器启动..."
           SERVER_OK=0
           for i in $(seq 1 30); do
-            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5000/ 2>/dev/null || echo "000")
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5010/ 2>/dev/null || echo "000")
             if [ "$HTTP_CODE" = "200" ]; then
               echo "✅ 服务器在 ${i}s 内就绪"
               SERVER_OK=1
@@ -158,28 +158,28 @@ jobs:
           fi
 
           # 测试主页返回 200
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5000/)
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5010/)
           echo "主页 HTTP 状态: $STATUS"
           [ "$STATUS" = "200" ] && echo "✅ 主页响应正常" || (echo "❌ 主页响应异常: $STATUS" && kill $SERVER_PID && exit 1)
 
           # 测试 /api/files 接口（返回 JSON）
           echo "--- /api/files 接口 ---"
-          curl -s http://127.0.0.1:5000/api/files | python3 -m json.tool | head -20
+          curl -s http://127.0.0.1:5010/api/files | python3 -m json.tool | head -20
           echo "✅ /api/files 接口正常"
 
           # 测试 /api/config 接口
           echo "--- /api/config 接口 ---"
-          curl -s http://127.0.0.1:5000/api/config | python3 -m json.tool | head -20
+          curl -s http://127.0.0.1:5010/api/config | python3 -m json.tool | head -20
           echo "✅ /api/config 接口正常"
 
           # 测试 /api/config_hard 接口（硬件信息）
           echo "--- /api/config_hard 接口（硬件探测）---"
-          curl -s http://127.0.0.1:5000/api/config_hard | python3 -m json.tool
+          curl -s http://127.0.0.1:5010/api/config_hard | python3 -m json.tool
           echo "✅ /api/config_hard 接口正常"
 
           # 测试 /api/models 接口
           echo "--- /api/models 接口 ---"
-          curl -s http://127.0.0.1:5000/api/models | python3 -m json.tool | head -20
+          curl -s http://127.0.0.1:5010/api/models | python3 -m json.tool | head -20
           echo "✅ /api/models 接口正常"
 
           # 关闭服务器
