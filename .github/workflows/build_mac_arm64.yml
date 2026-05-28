@@ -23,6 +23,8 @@ jobs:
     # macos-14 = Apple M1 (arm64) — GitHub Actions 免费 runner
     runs-on: macos-14
     timeout-minutes: 60
+    permissions:
+      contents: write
 
     steps:
       # 1. 检出代码
