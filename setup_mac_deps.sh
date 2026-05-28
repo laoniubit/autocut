@@ -23,32 +23,35 @@ echo "============================================"
 # 创建目录
 mkdir -p "$MAC_INTERNAL"
 
-# ---- 检测 Homebrew ----
-if ! command -v brew &>/dev/null; then
-    echo "[ERROR] 未检测到 Homebrew。请先安装："
-    echo "  /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
+# ---- 检测编译依赖工具 ----
+if ! command -v git &>/dev/null; then
+    echo "[ERROR] 未检测到 git，请先安装 git。"
+    exit 1
+fi
+if ! command -v cmake &>/dev/null; then
+    echo "[ERROR] 未检测到 cmake。请先运行 'brew install cmake' 安装编译工具。"
     exit 1
 fi
 
-echo "[OK] Homebrew 已安装: $(brew --version | head -1)"
+echo "[OK] 编译工具检测正常 (git, cmake)"
 echo ""
 
 # ============================================================
 # 1. FFmpeg
 # ============================================================
-echo "[Step 1/2] 安装 FFmpeg..."
-if ! command -v ffmpeg &>/dev/null; then
-    echo "  正在通过 Homebrew 安装 ffmpeg..."
-    brew install ffmpeg
+echo "[Step 1/2] 安装静态版 FFmpeg..."
+ARCH=$(uname -m)
+if [ "$ARCH" = "x86_64" ]; then
+    URL="https://github.com/shaka-project/static-ffmpeg-binaries/releases/download/n7.1-1/ffmpeg-osx-x86_64"
 else
-    echo "  FFmpeg 已存在: $(which ffmpeg)"
+    URL="https://github.com/shaka-project/static-ffmpeg-binaries/releases/download/n7.1-1/ffmpeg-osx-arm64"
 fi
 
-FFMPEG_PATH="$(which ffmpeg)"
-cp "$FFMPEG_PATH" "$MAC_INTERNAL/ffmpeg"
+echo "  正在下载适用于 $ARCH 的官方静态版 FFmpeg..."
+curl -L -o "$MAC_INTERNAL/ffmpeg" "$URL"
 chmod +x "$MAC_INTERNAL/ffmpeg"
 FFMPEG_SIZE=$(du -sh "$MAC_INTERNAL/ffmpeg" | cut -f1)
-echo "  ✅ ffmpeg 已复制到 _internal/ffmpeg ($FFMPEG_SIZE)"
+echo "  ✅ 静态版 ffmpeg 已下载并保存到 _internal/ffmpeg ($FFMPEG_SIZE)"
 echo ""
 
 # ============================================================
@@ -70,8 +73,8 @@ cd "$WHISPER_BUILD_DIR/whisper.cpp"
 ARCH=$(uname -m)
 echo "  当前架构: $ARCH"
 
-# 编译参数
-CMAKE_ARGS="-DWHISPER_BUILD_TESTS=OFF -DWHISPER_BUILD_EXAMPLES=ON"
+# 编译参数：禁用共享库编译，确保静态链接，防止打包后动态库缺失
+CMAKE_ARGS="-DWHISPER_BUILD_TESTS=OFF -DWHISPER_BUILD_EXAMPLES=ON -DBUILD_SHARED_LIBS=OFF"
 
 # Metal GPU 加速（Apple Silicon 和 Intel Mac 均支持）
 if system_profiler SPDisplaysDataType 2>/dev/null | grep -q "Metal"; then
@@ -93,7 +96,7 @@ if [ -f "$WHISPER_BIN" ]; then
     cp "$WHISPER_BIN" "$MAC_INTERNAL/whisper-cli"
     chmod +x "$MAC_INTERNAL/whisper-cli"
     WHISPER_SIZE=$(du -sh "$MAC_INTERNAL/whisper-cli" | cut -f1)
-    echo "  ✅ whisper-cli 已编译并复制到 _internal/whisper-cli ($WHISPER_SIZE)"
+    echo "  ✅ whisper-cli 已静态编译并复制到 _internal/whisper-cli ($WHISPER_SIZE)"
 else
     echo "  [ERROR] 编译失败，未找到 whisper-cli 二进制"
     echo "  构建目录: $WHISPER_BUILD_DIR/whisper.cpp/build/bin/"

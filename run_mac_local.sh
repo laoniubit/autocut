@@ -15,11 +15,39 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 echo "============================================"
-# Check if virtual environment exists
 if [ ! -d "venv_mac" ]; then
-    echo "[!] 警告: 未找到 venv_mac 虚拟环境目录。"
-    echo "    正在使用当前环境的 Python 3.12 创建虚拟环境..."
-    /usr/local/Cellar/python@3.12/3.12.10/Frameworks/Python.framework/Versions/3.12/bin/python3.12 -m venv venv_mac
+    # 优先检测官方 Python.org macOS Installer 框架版本（以避免 Homebrew 动态库链接污染）
+    PYTHON_CMD=""
+    for py_path in \
+        "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3" \
+        "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3"; do
+        if [ -x "$py_path" ]; then
+            PYTHON_CMD="$py_path"
+            break
+        fi
+    done
+
+    if [ -n "$PYTHON_CMD" ]; then
+        echo "✅ 检测到官方 Python.org macOS 运行框架: $PYTHON_CMD"
+    else
+        # 兜底寻找本地 Python 3.12 / 3.11 / python3，并给出安全警告
+        if command -v python3.12 &>/dev/null; then
+            PYTHON_CMD="python3.12"
+        elif command -v python3.11 &>/dev/null; then
+            PYTHON_CMD="python3.11"
+        else
+            PYTHON_CMD="python3"
+        fi
+        echo "[!] 警告: 未检测到官方 Python.org 框架。当前使用: $(which $PYTHON_CMD)"
+        echo "    说明: 如果该 Python 属于 Homebrew 编译版本，本地打包出的 App 会包含 Homebrew 动态链接污染，"
+        echo "          分发给未安装 Homebrew 的其他 Mac 用户时会发生启动崩溃 (dyld 报错)。"
+        echo "          仅供本地开发调试；若要本地安全打包分发，请安装官方 macOS 运行时:"
+        echo "          下载地址: https://www.python.org/downloads/macos/"
+        echo ""
+    fi
+
+    echo "    正在使用 $PYTHON_CMD 创建虚拟环境..."
+    $PYTHON_CMD -m venv venv_mac
     echo "✅ venv_mac 创建成功！"
 fi
 
