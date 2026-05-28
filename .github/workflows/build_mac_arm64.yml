@@ -24,7 +24,7 @@ jobs:
             ggml-metal: 'ON'
             osx-arch: 'arm64'
           - arch: x86_64
-            os: macos-14
+            os: macos-13
             python-arch: x64
             ffmpeg-url: https://github.com/shaka-project/static-ffmpeg-binaries/releases/download/n7.1-1/ffmpeg-osx-x64
             ggml-metal: 'OFF'
