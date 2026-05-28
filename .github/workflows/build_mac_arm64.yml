@@ -22,11 +22,13 @@ jobs:
             python-arch: arm64
             ffmpeg-url: https://github.com/shaka-project/static-ffmpeg-binaries/releases/download/n7.1-1/ffmpeg-osx-arm64
             ggml-metal: 'ON'
+            osx-arch: 'arm64'
           - arch: x86_64
-            os: macos-13
+            os: macos-14
             python-arch: x64
             ffmpeg-url: https://github.com/shaka-project/static-ffmpeg-binaries/releases/download/n7.1-1/ffmpeg-osx-x64
             ggml-metal: 'OFF'
+            osx-arch: 'x86_64'
 
     steps:
       # 1. 检出代码
@@ -66,6 +68,7 @@ jobs:
             -DWHISPER_BUILD_EXAMPLES=ON \
             -DGGML_METAL=${{ matrix.ggml-metal }} \
             -DBUILD_SHARED_LIBS=OFF \
+            -DCMAKE_OSX_ARCHITECTURES=${{ matrix.osx-arch }} \
             -DCMAKE_BUILD_TYPE=Release
           cmake --build . --config Release -j$(sysctl -n hw.logicalcpu)
           cp bin/whisper-cli "$GITHUB_WORKSPACE/_internal/whisper-cli"
@@ -143,7 +146,7 @@ jobs:
             本版本同时包含适用于 Apple Silicon (M芯片) 与 Intel 处理器的 macOS 可执行文件。
 
             ### 系统要求
-            - **M 芯片版本 (arm64)**: 适用于 Apple M1 / M2 / M3 / M4 等芯片的 Mac，支持 Metal GPU 硬件加速。
+            - **M 芯片版本 (arm64)**: 适用于 Apple M1 / M2 / M3 / M4 等芯片 of Mac，支持 Metal GPU 硬件加速。
             - **Intel 版本 (x86_64)**: 适用于使用 Intel 芯片的旧款 Mac。
 
             ### 安装步骤
