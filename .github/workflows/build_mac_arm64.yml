@@ -122,20 +122,40 @@ jobs:
         run: |
           echo "====== [TEST 2] 服务器 API 功能测试 ======"
 
-          # 后台启动 Flask 服务器
-          python acut_server.py &
+          # 确保 _internal 目录存在并含有必要的 symlink（开发模式下）
+          ls -la _internal/
+          echo "ffmpeg 路径: $(ls -la _internal/ffmpeg 2>/dev/null || echo '未找到')"
+          echo "templates 路径: $(ls -la _internal/templates 2>/dev/null || echo '未找到')"
+
+          # 后台启动 Flask 服务器，并把 stdout/stderr 全部写入日志文件
+          python acut_server.py > /tmp/server_test.log 2>&1 &
           SERVER_PID=$!
           echo "服务器 PID: $SERVER_PID"
 
-          # 等待服务器就绪 (最多 15 秒)
+          # 等待服务器就绪 (最多 30 秒)
           echo "等待服务器启动..."
-          for i in $(seq 1 15); do
-            if curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5000/ | grep -q "200"; then
+          SERVER_OK=0
+          for i in $(seq 1 30); do
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5000/ 2>/dev/null || echo "000")
+            if [ "$HTTP_CODE" = "200" ]; then
               echo "✅ 服务器在 ${i}s 内就绪"
+              SERVER_OK=1
               break
             fi
+            echo "  [${i}s] 等待中... HTTP=$HTTP_CODE"
             sleep 1
           done
+
+          # 如果服务器未就绪，打印日志并退出
+          if [ "$SERVER_OK" = "0" ]; then
+            echo "❌ 服务器启动失败，打印日志："
+            echo "===== server log ====="
+            cat /tmp/server_test.log || echo "(无日志)"
+            echo "===== startup error ====="
+            cat _internal_/STARTUP_ERROR.TXT 2>/dev/null || echo "(无 STARTUP_ERROR.TXT)"
+            kill $SERVER_PID 2>/dev/null || true
+            exit 1
+          fi
 
           # 测试主页返回 200
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5000/)
