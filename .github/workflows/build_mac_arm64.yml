@@ -23,14 +23,12 @@ jobs:
             ffmpeg-url: https://github.com/shaka-project/static-ffmpeg-binaries/releases/download/n7.1-1/ffmpeg-osx-arm64
             ggml-metal: 'ON'
             osx-arch: 'arm64'
-            python-prefix: ''
           - arch: x86_64
-            os: macos-14
+            os: macos-13
             python-arch: x64
             ffmpeg-url: https://github.com/shaka-project/static-ffmpeg-binaries/releases/download/n7.1-1/ffmpeg-osx-x64
             ggml-metal: 'OFF'
             osx-arch: 'x86_64'
-            python-prefix: 'arch -x86_64'
 
     steps:
       # 1. 检出代码
@@ -47,8 +45,8 @@ jobs:
       # 3. 安装 Python 依赖
       - name: Install Python Dependencies
         run: |
-          ${{ matrix.python-prefix }} $pythonLocation/bin/python -m pip install --upgrade pip
-          ${{ matrix.python-prefix }} $pythonLocation/bin/pip install -r requirements_mac.txt
+          $pythonLocation/bin/python -m pip install --upgrade pip
+          $pythonLocation/bin/pip install -r requirements_mac.txt
 
       # 4. 下载静态版 FFmpeg (确保分发的 App 无外部 Homebrew 动态库依赖)
       - name: Download Static FFmpeg (${{ matrix.arch }})
@@ -89,7 +87,7 @@ jobs:
       # 7. PyInstaller 编译打包
       - name: Build with PyInstaller (${{ matrix.arch }})
         run: |
-          ${{ matrix.python-prefix }} $pythonLocation/bin/python _build_mac.py --arch ${{ matrix.arch }}
+          $pythonLocation/bin/python _build_mac.py --arch ${{ matrix.arch }}
 
       # 8. 查看编译产物
       - name: List Build Output
