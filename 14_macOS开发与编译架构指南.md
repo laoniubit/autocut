@@ -69,5 +69,10 @@ graph TD
 3. **依赖包版本强锁定 (Locking)**
    * 本地与云端共享相同的 [requirements_mac.txt](file:///Users/laoniubit/MyPython/AUTOCUT/requirements_mac.txt)，强锁定核心 Python 包的精确版本，防止因为依赖包的自动更新而导致两边运行逻辑漂移。
 
-4. **本地接口跨域隔离 (CORS)**
+4. **规范化的版本管理 (VERSION 唯一数据源)**
+   * 引入了受 Git 追踪的 [VERSION](file:///Users/laoniubit/MyPython/AUTOCUT/VERSION) 文本文件作为项目版本的唯一事实源。
+   * [bump_version.py](file:///Users/laoniubit/MyPython/AUTOCUT/bump_version.py) 会读取并累加该文件，并自动将新版本同步覆盖写入代码文件 [acut_engine.py](file:///Users/laoniubit/MyPython/AUTOCUT/acut_engine.py#L145) 的默认硬编码版本中。这彻底修复了干净克隆仓库编译时因缺失私有 JSON 文件导致编译崩溃的问题，实现了版本迭代的代码级追踪。
+   * 发布脚本 [git_push_release.sh](file:///Users/laoniubit/MyPython/AUTOCUT/git_push_release.sh#L50-L56) 改为读取 `VERSION` 文件生成发布 Tag，使代码内部版本与 Git 发布 Tag 永远保持严格对齐。
+
+5. **本地接口跨域隔离 (CORS)**
    * 本地和云端运行时，[acut_server.py](file:///Users/laoniubit/MyPython/AUTOCUT/acut_server.py) 中的 WebSockets 跨域设置均收紧为仅限 `http://127.0.0.1:5010` 和 `http://localhost:5010`，全面保护本地用户不受跨站请求伪造的潜在威胁。

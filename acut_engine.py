@@ -142,7 +142,7 @@ CONFIG_HARD = {
     "asr_processing": {
         "model_id": "tiny", "device": "cpu"
     },
-    "version": "12.81"
+    "version": "12.93"
 }
 def load_hard_config():
     if os.path.exists(CONFIG_HARD_PATH):

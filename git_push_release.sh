@@ -47,9 +47,9 @@ else
 fi
 
 # 4. 获取版本号并创建对应的 Release Tag
-VERSION="12.82"
-if [ -f "_internal_/config_hard.json" ]; then
-    CONF_VER=$(python3 -c "import json; print(json.load(open('_internal_/config_hard.json')).get('version', ''))" 2>/dev/null || echo "")
+VERSION="12.92"
+if [ -f "VERSION" ]; then
+    CONF_VER=$(cat VERSION | tr -d '[:space:]')
     if [ -n "$CONF_VER" ]; then
         VERSION="$CONF_VER"
     fi
