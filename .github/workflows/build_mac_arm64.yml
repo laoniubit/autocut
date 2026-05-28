@@ -1,42 +1,44 @@
-name: Build Mac arm64 (Apple Silicon M-Chip)
+name: Build Mac arm64 & x86_64 (M-Chip & Intel)
 
 on:
   # 手动触发
   workflow_dispatch:
-    inputs:
-      arch:
-        description: '目标架构'
-        required: true
-        default: 'arm64'
-        type: choice
-        options:
-          - arm64
-          - x86_64
-          - universal2
   # 推送 tag 时自动触发
   push:
     tags:
       - 'v*'
 
 jobs:
-  build-mac-arm64:
-    # macos-14 = Apple M1 (arm64) — GitHub Actions 免费 runner
-    runs-on: macos-14
+  build-mac:
+    name: Build Mac (${{ matrix.arch }})
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 60
-    permissions:
-      contents: write
+
+    strategy:
+      matrix:
+        include:
+          - arch: arm64
+            os: macos-14
+            python-arch: arm64
+            ffmpeg-url: https://github.com/shaka-project/static-ffmpeg-binaries/releases/download/n7.1-1/ffmpeg-osx-arm64
+            ggml-metal: 'ON'
+          - arch: x86_64
+            os: macos-13
+            python-arch: x64
+            ffmpeg-url: https://github.com/shaka-project/static-ffmpeg-binaries/releases/download/n7.1-1/ffmpeg-osx-x64
+            ggml-metal: 'OFF'
 
     steps:
       # 1. 检出代码
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. 设置 Python (arm64 原生)
-      - name: Set up Python 3.11 (arm64)
+      # 2. 设置 Python
+      - name: Set up Python 3.11 (${{ matrix.arch }})
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          architecture: 'arm64'
+          architecture: '${{ matrix.python-arch }}'
 
       # 3. 安装 Python 依赖
       - name: Install Python Dependencies
@@ -45,16 +47,16 @@ jobs:
           pip install -r requirements_mac.txt
 
       # 4. 下载静态版 FFmpeg (确保分发的 App 无外部 Homebrew 动态库依赖)
-      - name: Download Static FFmpeg (arm64)
+      - name: Download Static FFmpeg (${{ matrix.arch }})
         run: |
           mkdir -p _internal
-          curl -L -o _internal/ffmpeg https://github.com/shaka-project/static-ffmpeg-binaries/releases/download/n7.1-1/ffmpeg-osx-arm64
+          curl -L -o _internal/ffmpeg ${{ matrix.ffmpeg-url }}
           chmod +x _internal/ffmpeg
           echo "FFmpeg version: $(_internal/ffmpeg -version | head -1)"
           echo "FFmpeg arch: $(lipo -info _internal/ffmpeg)"
 
-      # 5. 编译 whisper.cpp (Metal 加速, arm64)
-      - name: Build whisper.cpp with Metal
+      # 5. 编译 whisper.cpp
+      - name: Build whisper.cpp
         run: |
           git clone --depth 1 https://github.com/ggml-org/whisper.cpp.git /tmp/whisper_cpp
           cd /tmp/whisper_cpp
@@ -62,7 +64,7 @@ jobs:
           cmake .. \
             -DWHISPER_BUILD_TESTS=OFF \
             -DWHISPER_BUILD_EXAMPLES=ON \
-            -DGGML_METAL=ON \
+            -DGGML_METAL=${{ matrix.ggml-metal }} \
             -DBUILD_SHARED_LIBS=OFF \
             -DCMAKE_BUILD_TYPE=Release
           cmake --build . --config Release -j$(sysctl -n hw.logicalcpu)
@@ -79,9 +81,9 @@ jobs:
           ls -lh models/whisper-cpp/
 
       # 7. PyInstaller 编译打包
-      - name: Build with PyInstaller (arm64)
+      - name: Build with PyInstaller (${{ matrix.arch }})
         run: |
-          python _build_mac.py --arch arm64
+          python _build_mac.py --arch ${{ matrix.arch }}
 
       # 8. 查看编译产物
       - name: List Build Output
@@ -108,30 +110,48 @@ jobs:
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AutoCut-Mac-arm64-${{ github.run_number }}
+          name: AutoCut-Mac-${{ matrix.arch }}-${{ github.run_number }}
           path: "*.zip"
           retention-days: 30
 
-      # 11. 如果是 tag 发布，自动创建 GitHub Release
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: build-mac
+    if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+
+      - name: Display downloaded files
+        run: |
+          ls -R release-artifacts/
+
       - name: Create GitHub Release (on tag push)
-        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: "*.zip"
-          name: "AutoCut Matrix AI ${{ github.ref_name }} (Mac arm64)"
+          files: |
+            release-artifacts/**/*.zip
+          name: "AutoCut Matrix AI ${{ github.ref_name }} (macOS)"
           body: |
-            ## AutoCut Matrix AI - Mac Apple Silicon 版本
+            ## AutoCut Matrix AI - macOS 双版本发布
+
+            本版本同时包含适用于 Apple Silicon (M芯片) 与 Intel 处理器的 macOS 可执行文件。
 
             ### 系统要求
-            - macOS 12+ (Monterey 或更新)
-            - Apple Silicon (M1 / M2 / M3 / M4 芯片)
+            - **M 芯片版本 (arm64)**: 适用于 Apple M1 / M2 / M3 / M4 等芯片的 Mac，支持 Metal GPU 硬件加速。
+            - **Intel 版本 (x86_64)**: 适用于使用 Intel 芯片的旧款 Mac。
 
             ### 安装步骤
-            1. 解压 zip 压缩包
-            2. 将 Whisper 模型放入 `models/whisper-cpp/` 目录
-               - 推荐: `ggml-small.bin` (487 MB)
-               - 下载: https://huggingface.co/ggerganov/whisper.cpp
-            3. 运行 `./AutoCut_Mac_*` 可执行文件
-            4. 浏览器访问 `http://127.0.0.1:5000`
+            1. 下载对应架构的 `.zip` 压缩包并解压。
+            2. 将 Whisper 模型放入 `models/whisper-cpp/` 目录：
+               - 推荐：`ggml-small.bin` (487 MB)
+               - 下载链接：https://huggingface.co/ggerganov/whisper.cpp/tree/main
+            3. 打开终端或双击运行解压后的 `AutoCut_Mac_*` 目录中的主程序。
+            4. 在浏览器中访问 `http://127.0.0.1:5000`。
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
