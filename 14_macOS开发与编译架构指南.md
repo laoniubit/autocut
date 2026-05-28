@@ -54,20 +54,20 @@ graph TD
 
 ---
 
-## 3. 本地与云端一致性对齐配置（沙箱化规范）
+## 3. 本地与云端解耦设计与对齐配置
 
-为保证“本地开发”和“云端打包”体验完全对齐，项目采用了以下沙箱化设计：
+为了兼顾“本地开发的高效轻量”与“云端分发的绝对纯净安全”，项目对环境做出了如下解耦设计：
 
-1. **Python 运行时对齐 (Python 3.12)**
-   * 本地虚拟环境创建与云端构建环境均统一指向 **Python 3.12**。
-   * [run_mac_local.sh](file:///Users/laoniubit/MyPython/AUTOCUT/run_mac_local.sh) 会优先检测并选用官方 Python.org 框架版，如果使用 Homebrew 替代，则输出安全性警示。
+1. **Python 运行环境解耦**
+   * **本地开发**：[run_mac_local.sh](file:///Users/laoniubit/MyPython/AUTOCUT/run_mac_local.sh) 会直接使用您系统 PATH 中的 `python3.12` / `python3.11`，不限制是否为 Homebrew 版本，没有任何警报，确保日常开发体验足够轻量和无感。
+   * **云端打包**：自动基于官方 Framework 安装纯净的 Python 3.12 环境进行发布包构建，从源头上杜绝了 Homebrew 的动态链接库（`dylib`）对官方分发包的链接污染。
 
-2. **外部引擎静态化**
-   * 本地脚本 [setup_mac_deps.sh](file:///Users/laoniubit/MyPython/AUTOCUT/setup_mac_deps.sh) 已改为根据本机架构自动从发布源下载官方**静态链接版 FFmpeg**，废弃了原有的 `brew install ffmpeg` 复制逻辑。
-   * 本地编译 `whisper-cli` 时强制传递 `-DBUILD_SHARED_LIBS=OFF` 构建参数，杜绝因本地环境动态链接造成的移植失败。
+2. **外部引擎获取逻辑（离线优先）**
+   * 本地脚本 [setup_mac_deps.sh](file:///Users/laoniubit/MyPython/AUTOCUT/setup_mac_deps.sh) 采用了**离线优先**的逻辑：如果本地已安装了系统 `ffmpeg`（如通过 Homebrew），则会直接将其复制到 `_internal/` 目录下，不产生任何外网下载流量；只有当本地未安装时，才会下载对应的静态版本作为备用。
+   * 本地编译 `whisper-cli` 时，如果系统缺失 `cmake` 工具，脚本将**自动降级**并复用已存在的通用二进制版本，不会报错退出。
 
 3. **依赖包版本强锁定 (Locking)**
-   * [requirements_mac.txt](file:///Users/laoniubit/MyPython/AUTOCUT/requirements_mac.txt) 锁定所有包 of 确切版本（如 `Flask==3.1.3`、`numpy==2.4.6` 等），防范第三方依赖更新引起的编译崩溃。
+   * 本地与云端共享相同的 [requirements_mac.txt](file:///Users/laoniubit/MyPython/AUTOCUT/requirements_mac.txt)，强锁定核心 Python 包的精确版本，防止因为依赖包的自动更新而导致两边运行逻辑漂移。
 
-4. **安全沙箱隔离 (CORS)**
-   * [acut_server.py](file:///Users/laoniubit/MyPython/AUTOCUT/acut_server.py) 的 SocketIO 跨域配置从 `*` 收紧为仅限本地 `http://127.0.0.1:5010` 和 `http://localhost:5010`，防御跨站请求攻击（CSRF/XSS 提权风险）。
+4. **本地接口跨域隔离 (CORS)**
+   * 本地和云端运行时，[acut_server.py](file:///Users/laoniubit/MyPython/AUTOCUT/acut_server.py) 中的 WebSockets 跨域设置均收紧为仅限 `http://127.0.0.1:5010` 和 `http://localhost:5010`，全面保护本地用户不受跨站请求伪造的潜在威胁。
