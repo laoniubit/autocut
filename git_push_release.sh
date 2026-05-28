@@ -29,7 +29,19 @@ if ! git remote get-url origin &>/dev/null; then
     fi
 fi
 
-# 3. 提交本地所有修改过的文件
+# 3. 获取版本号并创建对应的 Release Tag
+VERSION="12.93"
+if [ -f "VERSION" ]; then
+    CONF_VER=$(cat VERSION | tr -d '[:space:]')
+    if [ -n "$CONF_VER" ]; then
+        VERSION="$CONF_VER"
+    fi
+fi
+
+TAG_NAME="v$VERSION"
+echo "[Git] 准备推送的版本 Tag: $TAG_NAME"
+
+# 4. 提交本地所有修改过的文件
 echo "[Git] 正在暂存修改过的代码文件..."
 git add .
 
@@ -41,22 +53,10 @@ fi
 
 echo "[Git] 正在提交本地修改..."
 if ! git diff-index --quiet HEAD -- 2>/dev/null; then
-    git commit -m "feat: 优化硬件探测与设备自适应逻辑，合并 _internal 目录，升级依赖二进制为 universal2"
+    git commit -m "bump: release version $TAG_NAME"
 else
     echo "[Git] 未检测到文件变化，跳过 commit。"
 fi
-
-# 4. 获取版本号并创建对应的 Release Tag
-VERSION="12.92"
-if [ -f "VERSION" ]; then
-    CONF_VER=$(cat VERSION | tr -d '[:space:]')
-    if [ -n "$CONF_VER" ]; then
-        VERSION="$CONF_VER"
-    fi
-fi
-
-TAG_NAME="v$VERSION"
-echo "[Git] 准备推送的版本 Tag: $TAG_NAME"
 
 # 5. 推送代码和 Tag 触发云端编译
 echo "[Git] 正在推送代码至 GitHub ($BRANCH 分支)..."

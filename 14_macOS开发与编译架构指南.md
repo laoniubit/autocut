@@ -76,3 +76,7 @@ graph TD
 
 5. **本地接口跨域隔离 (CORS)**
    * 本地和云端运行时，[acut_server.py](file:///Users/laoniubit/MyPython/AUTOCUT/acut_server.py) 中的 WebSockets 跨域设置均收紧为仅限 `http://127.0.0.1:5010` 和 `http://localhost:5010`，全面保护本地用户不受跨站请求伪造的潜在威胁。
+
+6. **版本控制与依赖升级的完全隔离 (完全解耦)**
+   * **核心原则**：项目的版本控制操作（如版本递增、Git Tag 创建、发布推送等）纯粹只管理软件版本代号与源码改动，绝不涉及、也不应该混入第三方依赖环境（如 Python 包、二进制编译工具链）的升级。
+   * **职责分离**：依赖环境包的版本锁定（如 `requirements_mac.txt`）以及外部依赖二进制的构建/下载逻辑（如 `setup_mac_deps.sh`）属于单独的安全环境治理。所有的依赖变化应进行独立审计与提交，绝不在版本发布脚本（如 `git_push_release.sh`）中捆绑升级或在提交信息中混淆环境变化。
