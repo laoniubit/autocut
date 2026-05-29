@@ -4,10 +4,10 @@
 #
 # 使用方法：
 #   # 1. 编译当前机器架构的版本 (您的 Intel Mac 会生成 x86_64 版本)：
-#   ./build_mac_local.sh
+#   ./run_local.sh
 #
 #   # 2. 编译特定架构版本 (例如 Apple Silicon 架构需在 M芯片 Mac 上执行)：
-#   ./build_mac_local.sh --arch arm64
+#   ./run_local.sh --arch arm64
 # =============================================================================
 
 set -e
@@ -18,7 +18,7 @@ cd "$SCRIPT_DIR"
 echo "============================================"
 # Check if virtual environment exists
 if [ ! -d "venv_mac" ]; then
-    echo "[!] 错误: 未找到 venv_mac 虚拟环境。请先运行一次 ./run_mac_local.sh 以初始化环境。"
+    echo "[!] 错误: 未找到 venv_mac 虚拟环境。请先运行一次 ./run.sh 以初始化环境。"
     exit 1
 fi
 

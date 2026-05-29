@@ -63,8 +63,8 @@ os.makedirs(WORKDIR, exist_ok=True)
 # Global Config Management
 # ----------------------------
 def _default_export_path() -> str:
-    """macOS 默认导出目录：用户桌面。"""
-    return str(Path.home() / "Desktop" / "autocut_out")
+    """macOS 默认导出目录：系统下载目录。"""
+    return str(Path.home() / "Downloads" / "autocut_out")
 
 CONFIG: typing.Dict[str, typing.Any] = {
     "output_specs": {
@@ -142,7 +142,7 @@ CONFIG_HARD = {
     "asr_processing": {
         "model_id": "tiny", "device": "cpu"
     },
-    "version": "12.93"
+    "version": "12.94"
 }
 def load_hard_config():
     if os.path.exists(CONFIG_HARD_PATH):

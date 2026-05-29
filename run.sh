@@ -5,8 +5,8 @@
 # 使用方法：
 #   1. 开启您的代理/VPN（以便终端能正常连接官方 PyPI 服务器）
 #   2. 运行脚本：
-#      chmod +x run_mac_local.sh
-#      ./run_mac_local.sh
+#      chmod +x run.sh
+#      ./run.sh
 # =============================================================================
 
 set -e
@@ -38,7 +38,7 @@ echo ""
 echo "[Step 2/3] 正在检查并更新依赖包 (使用官方 PyPI 二进制 Wheel)..."
 echo "提示: 如果卡住或下载缓慢，请确保您的终端已挂载海外代理/VPN。"
 pip install --upgrade pip -q
-pip install -r requirements_mac.txt --only-binary=:all:
+pip install -r requirements_mac.txt --only-binary=:all: -i https://pypi.tuna.tsinghua.edu.cn/simple
 echo "✅ 依赖检查/安装完成！"
 echo ""
 

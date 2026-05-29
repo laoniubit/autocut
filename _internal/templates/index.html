@@ -5106,9 +5106,28 @@
             }
         }
 
+        const modelMeta = {
+            'tiny': {
+                icon: '🚀',
+                desc: '极速定位模型，约 74 MB',
+                file: 'ggml-tiny.bin'
+            },
+            'small': {
+                icon: '⚖️',
+                desc: '中型平衡模型，约 465 MB',
+                file: 'ggml-small.bin'
+            },
+            'large-v3-turbo': {
+                icon: '🎯',
+                desc: '高精度旗舰模型，约 1.5 GB',
+                file: 'ggml-large-v3-turbo.bin'
+            }
+        };
+
         async function downloadAIModels(targetModel) {
             const target = targetModel || selectedAIModel || 'tiny';
-            const confirmed = await m_confirm(`将下载 ${target} 模型 (约数百MB)，请保持网络通畅，下载期间请勿关闭程序。是否继续？`, "确认下载 ASR 模型");
+            const meta = modelMeta[target] || { desc: `${target} 模型` };
+            const confirmed = await m_confirm(`将从国内镜像源下载 ${target} 模型 (${meta.desc})，请保持网络通畅，下载期间请勿关闭程序。是否继续？`, "确认下载 ASR 模型");
             if (!confirmed) return;
 
             const probeLog = document.getElementById('ai-probe-log');
@@ -5142,15 +5161,22 @@
                 container.innerHTML = data.supported.map(m => {
                     const isInstalled = data.installed.includes(m);
                     const isActive = selectedAIModel === m;
+                    const meta = modelMeta[m] || { icon: '📦', desc: `${m} 模型`, file: `ggml-${m}.bin` };
 
                     return `
                         <div class="model-item ${isActive ? 'active' : ''} ${!isInstalled ? 'missing' : ''}" 
                              onclick="selectModel('${m}', ${isInstalled})">
                             <div class="model-header">
-                                <span class="model-name">${m}</span>
+                                <span class="model-name">${meta.icon} ${m}</span>
                                 <span class="badge ${isInstalled ? 'badge-green' : 'badge-gray'}">${isInstalled ? '已就绪' : '缺失库'}</span>
                             </div>
-                            <div class="model-status">
+                            <div style="font-size: 11px; color: var(--text-sec); margin: 4px 0 2px 0; text-align: left;">
+                                ${meta.desc}
+                            </div>
+                            <div style="font-size: 10px; color: rgba(255,255,255,0.3); font-family: monospace; text-align: left;">
+                                ${meta.file}
+                            </div>
+                            <div class="model-status" style="margin-top: 6px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 4px;">
                                 ${isActive ? (isInstalled ? '当前活动' : '已选择') : (isInstalled ? '点击切换' : '点击下载库')}
                             </div>
                         </div>

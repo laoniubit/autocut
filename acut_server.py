@@ -199,11 +199,11 @@ def get_hardware_footprint(force=False):
     if not force and profile.get('scanned', False):
         return profile
 
-    cpu_name = "M"
+    cpu_name = "Unknown CPU"
     gpu_list = []
 
     # ================================================================
-    # macOS 原生硬件探针 - 只分辨 Intel 和 M 芯片
+    # macOS 原生硬件探针 - 获取详细 CPU 品牌型号
     # ================================================================
     try:
         res = subprocess.run(
@@ -212,19 +212,12 @@ def get_hardware_footprint(force=False):
         )
         brand = res.stdout.strip() if res.returncode == 0 else ""
         if not brand:
-            brand = platform.processor() or ""
-        if "intel" in brand.lower():
-            cpu_name = "Intel"
-        else:
-            cpu_name = "M"
+            brand = platform.processor() or platform.machine() or "Unknown CPU"
+        cpu_name = brand
     except Exception:
         # Fallback to checking processor architecture or platform.processor()
-        proc = (platform.processor() or "").lower()
-        mach = (platform.machine() or "").lower()
-        if "intel" in proc or "x86" in proc or "x86" in mach:
-            cpu_name = "Intel"
-        else:
-            cpu_name = "M"
+        proc = platform.processor() or platform.machine() or "Unknown CPU"
+        cpu_name = proc
 
 
     # 2. GPU 探测：system_profiler 解析所有显示适配器
@@ -970,7 +963,7 @@ def get_model_status():
     return jsonify({
         "installed": installed,
         "current": asr_service.current_model_id or "None",
-        "supported": ["tiny", "large-v3-turbo"]
+        "supported": ["tiny", "small", "large-v3-turbo"]
     })
 
 @app.route('/api/unload_ai', methods=['POST'])
@@ -1425,7 +1418,7 @@ def optimize_config():
         config_changed = True
     
     # Auto-select best device based on CPU chip architecture (Intel -> CPU, M-series -> Metal GPU)
-    if cpu_name == "Intel":
+    if "intel" in str(cpu_name).lower():
         target_device = 'cpu'
     else:
         target_device = 'metal' if len(gpu_list) > 0 else 'cpu'
@@ -1514,7 +1507,7 @@ def download_models():
             import requests
             import time
             
-            allowed_targets = ["tiny", "large-v3-turbo"]
+            allowed_targets = ["tiny", "small", "large-v3-turbo"]
             if target not in allowed_targets:
                 mapped_target = "tiny"
             else:

@@ -32,7 +32,7 @@
 * **[删除] NVIDIA GPU 检测**：删除了 `_has_nvidia_gpu()` 函数和 `check_nvenc_functional()` 逻辑。加载 `config_hard.json` 时，第一期用于侦测英伟达显卡以切换 `cuda` 的初始化代码被完全移除，配置设备直接锁定为 macOS 本地（CPU 或 Metal GPU 加速）。
 * **[精简] 路径寻址与常量**：
   * 将 `_CREATE_NO_WINDOW` 常量直接硬编码为 `0`（去除了 `subprocess.CREATE_NO_WINDOW` 条件判定）。
-  * 默认视频输出路径固化为 `~/Desktop/autocut_out`（去除 Windows 分支）。
+  * 默认视频输出路径固化为 `~/Downloads/autocut_out`（系统下载目录，原为桌面）。
   * FFmpeg 寻址固化：`_find_ffmpeg_binary()` 仅检索 macOS 格式的 `ffmpeg` 路径（包含 `_internal_mac/ffmpeg`、`_internal/ffmpeg` 和系统 PATH），不再探测 `ffmpeg.exe`。
 
 ### 2.2 `acut_asr.py` (自动语音识别模块重构)
