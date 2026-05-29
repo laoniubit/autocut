@@ -43,14 +43,24 @@ date_short = datetime.now().strftime("%Y%m%d")
 date_full = datetime.now().strftime("%Y%m%d_%H%M%S")
 target_arch = args.arch  # None = PyInstaller auto-detect
 
+# ---- Read Version ----
+version_str = "unknown"
+version_file_path = os.path.join(base, "VERSION")
+if os.path.exists(version_file_path):
+    try:
+        with open(version_file_path, "r", encoding="utf-8") as f:
+            version_str = f.read().strip()
+    except Exception as e:
+        print(f"[Build Warning] Failed to read VERSION: {e}")
+
 import platform as _platform
 current_arch = _platform.machine()  # arm64 or x86_64
 print(f"[Build Engine] Current machine arch : {current_arch}")
 print(f"[Build Engine] Target arch          : {target_arch or 'auto (' + current_arch + ')'}")
 
 arch_label = target_arch or current_arch
-exe_name = f"AutoCut_Mac_{date_short}_{arch_label}"
-dir_name = f"AutoCut_Mac_{date_full}_{arch_label}"
+exe_name = f"AutoCut_Mac_v{version_str}_{date_short}_{arch_label}"
+dir_name = f"AutoCut_Mac_v{version_str}_{date_full}_{arch_label}"
 
 # ---- Check Required Mac Binaries ----
 mac_internal = os.path.join(base, "_internal")
