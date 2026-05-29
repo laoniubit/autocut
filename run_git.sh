@@ -72,7 +72,7 @@ echo "[Git] 创建版本 Tag: $TAG_NAME..."
 git tag "$TAG_NAME"
 
 echo "[Git] 正在将 Tag 推送至 GitHub 触发 Actions 编译..."
-git push origin "$TAG_NAME"
+git push origin -f "$TAG_NAME"
 
 echo ""
 echo "=========================================================="
